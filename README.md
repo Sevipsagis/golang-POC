@@ -3,7 +3,7 @@
     - PORT: use for assign the running port of api.
     - SIGN: use for sign/verify JWT.
     - DB_CONN: use for connect to database(MySQL)
-2. Mysql for use as database of api.
+2. MySQL for use as database of api.
 3. Docker for run service image.
 
 # Command
