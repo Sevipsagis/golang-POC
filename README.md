@@ -1,10 +1,10 @@
 # Prerequisites
-1. Add example.env file for set environment variable for run test api on local.
+1. Add **example.env** file for set environment variable for run test api on local.
     - PORT: use for assign the running port of api.
     - SIGN: use for sign/verify JWT.
     - DB_CONN: use for connect to database(MySQL)
-2. MySQL for use as database of api.
-3. Docker for run service image.
+2. **MySQL** for use as database of api.
+3. **Docker** for run service image.
 
 # Command
 build-app: ```go build -ldflags "-X main.buildcommit=`git rev-parse --short HEAD` -X main.buildtime=`date "+%Y-%m-%dT%H:%M:%S%Z:00"`" -o app```
