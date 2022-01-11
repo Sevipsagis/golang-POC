@@ -13,13 +13,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"golang.org/x/time/rate"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
 	"github.com/sevipsagis/todo-api/auth"
 	"github.com/sevipsagis/todo-api/todo"
 )
 
+var buildcommit = "dev"
+var buildtime = time.Now().String()
 var limiter = rate.NewLimiter(5, 5)
 
 func limitHandler(c *gin.Context) {
@@ -40,12 +42,12 @@ func main() {
 	}
 	defer os.Remove("/tmp/live")
 	
-	err = godotenv.Load("local.env")
+	err = godotenv.Load("example.env")
 	if err != nil {
 		log.Printf("Please consider environment variable for local: %s\n", err)
 	}
 
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(os.Getenv("DB_CONN")), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect to database: " + err.Error())
 	}
@@ -53,6 +55,13 @@ func main() {
 	db.AutoMigrate(&todo.Todo{})
 
 	r := gin.Default()
+	r.GET("/x", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"buildcommit": buildcommit,
+			"buildtime": buildtime,
+		})
+		return
+	})
 	r.GET("/health", func(c *gin.Context) {
 		c.Status(200)
 		return
@@ -92,6 +101,6 @@ func main() {
 	if err := s.Shutdown(timeoutCtx); err != nil {
 		fmt.Println(err)
 	}
-
+	// change run server with r.Run() <r: gin.Route> to be s.ListenAndServe() <s: http.Server> for implement gracefully shutdown.
 	// r.Run()
 }
